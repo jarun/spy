@@ -1,6 +1,11 @@
 # keysniffer
 A Linux kernel module to grab keys pressed in the keyboard. Works with the US keyboard (and conforming laptops).  
-The keypress logs are printed via debugfs.
+The keypress logs are printed via debugfs. Only root or sudoers can read the keys. The module name has been crafted to blend-in with other kernel modules.  
+
+keysniffer is intended to track your own devices and NOT to tresspass on others. The author is not reponsible for any unethical usage.  
+
+If you find `keysniffer` useful, please consider donating via PayPal.  
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RMLTQ76JSXJ4Q"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donate Button with Credit Cards" /></a>
 
 #License
 keysniffer is licensed under GPL v3.
