@@ -1,6 +1,6 @@
 # keysniffer
-A kernel module to grab keys pressed in the keyboard.  
-The keys are printed with kernel messages as well as via debugfs.
+A kernel module to grab keys pressed in the keyboard. Works with the US keyboard (and conforming laptops).  
+The keys are printed via debugfs.
 
 #License
 keysniffer is licensed under GPL v3.
