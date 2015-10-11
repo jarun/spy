@@ -13,7 +13,7 @@ Clone the repository and run:
 To insert the module into the kernel, run:
 <pre>$ sudo insmod kisni.ko</pre>
 To view the pressed keys, run:
-<pre>$ cat /sys/kernel/debug/kisni/keys</pre>
+<pre>$ sudo cat /sys/kernel/debug/kisni/keys</pre>
 
 #Links
 http://www.gadgetweb.de/programming/39-how-to-building-your-own-kernel-space-keylogger.html  
