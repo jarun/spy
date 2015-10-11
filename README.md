@@ -1,6 +1,6 @@
 # keysniffer
-A kernel module to grab keys pressed in the keyboard. Works with the US keyboard (and conforming laptops).  
-The keys are printed via debugfs.
+A Linux kernel module to grab keys pressed in the keyboard. Works with the US keyboard (and conforming laptops).  
+The keypress logs are printed via debugfs.
 
 #License
 keysniffer is licensed under GPL v3.
@@ -12,7 +12,7 @@ Clone the repository and run:
 #Usage
 To insert the module into the kernel, run:
 <pre>$ sudo insmod kisni.ko</pre>
-To view the keys, run:
+To view the pressed keys, run:
 <pre>$ cat /sys/kernel/debug/kisni/keys</pre>
 
 #Links
