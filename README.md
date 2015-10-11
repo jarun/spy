@@ -13,8 +13,6 @@ Clone the repository and run:
 To insert the module into the kernel, run:
 <pre>$ sudo insmod kisni.ko</pre>
 To view the keys, run:
-<pre>$ dmesg</pre>
-OR
 <pre>$ cat /sys/kernel/debug/kisni/keys</pre>
 
 #Links
