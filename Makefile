@@ -1,6 +1,6 @@
-CFLAGS_keysniffer.o := -DDEBUG
+CFLAGS_kisni.o := -DDEBUG
 
-obj-m += keysniffer.o
+obj-m += kisni.o
 
 KERNELVERSION = $(shell uname -r)
 KDIR := /lib/modules/$(KERNELVERSION)/build
