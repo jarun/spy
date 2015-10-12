@@ -9,7 +9,7 @@ If you find `keysniffer` useful, please consider donating via PayPal.
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RMLTQ76JSXJ4Q"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donate Button with Credit Cards" /></a>
 
 #License
-keysniffer is licensed under GPL v3.
+keysniffer is licensed under GPL v2.
 
 #Compilation
 Clone the repository and run:
