@@ -108,7 +108,8 @@ int keysniffer_cb(struct notifier_block *nblock,
 {
 	size_t len;
 	struct keyboard_notifier_param *param = _param;
-	/* pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%d, value: 0x%x\n",
+
+	/* pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%x, value: 0x%x\n",
 		code, param->down, param->shift, param->value); */
 
 	if (!(param->down))
