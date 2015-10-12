@@ -28,7 +28,7 @@
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
-MODULE_DESCRIPTION("A kernel module to sniff and log the keys pressed in the system");
+MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
 
 /* Declarations */
 static struct dentry *file;
