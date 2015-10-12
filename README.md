@@ -20,6 +20,8 @@ To insert the module into the kernel, run:
 <pre>$ sudo insmod kisni.ko</pre>
 To view the pressed keys, run:
 <pre>$ sudo cat /sys/kernel/debug/kisni/keys</pre>
+To unload the module (and clear the logs), run:
+<pre>$ sudo rmmod kisni</pre>
 
 #Links
 http://www.gadgetweb.de/programming/39-how-to-building-your-own-kernel-space-keylogger.html  
