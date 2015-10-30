@@ -28,6 +28,7 @@
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
+MODULE_VERSION("1.2");
 MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
 
 /* Declarations */
