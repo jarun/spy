@@ -3,7 +3,9 @@ A Linux kernel module to grab keys pressed in the keyboard, or a keylogger. Work
 
 The keypress logs are recorded in debugfs as long as the module is loaded. Only root or sudoers can read the log. The module name has been crafted to blend-in with other kernel modules.  
 
-keysniffer is intended to track your own devices and NOT to trespass on others. The author is not reponsible for any unethical usage.  
+You can, however, execute a script at shutdown or reboot (the procedure would be distro-specific) to save the keys to a file.  
+
+keysniffer is intended to track your own devices and NOT to trespass on others. The author is not responsible for any unethical usage.  
 
 If you find `keysniffer` useful, please consider donating via PayPal.  
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RMLTQ76JSXJ4Q"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donate Button with Credit Cards" /></a>
@@ -22,6 +24,9 @@ To view the pressed keys, run:
 <pre>$ sudo cat /sys/kernel/debug/kisni/keys</pre>
 To unload the module (and clear the logs), run:
 <pre>$ sudo rmmod kisni</pre>
+
+#Developer
+Copyright (C) 2015 by Arun Prakash Jana &lt;engineerarun@gmail.com&gt;
 
 #Links
 http://www.gadgetweb.de/programming/39-how-to-building-your-own-kernel-space-keylogger.html  
