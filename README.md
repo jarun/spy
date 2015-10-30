@@ -21,7 +21,29 @@ Clone the repository and run:
 To insert the module into the kernel, run:
 <pre>$ sudo insmod kisni.ko</pre>
 To view the pressed keys, run:
-<pre>$ sudo cat /sys/kernel/debug/kisni/keys</pre>
+<pre>$ sudo cat /sys/kernel/debug/kisni/keys
+m
+o
+d
+i
+n
+f
+o
+ 
+k
+i
+s
+n
+i
+_ENTER_
+_UP_
+.
+_TAB_
+_TAB_
+k
+_TAB_
+_ENTER_
+_ENTER_</pre>
 To unload the module (and clear the logs), run:
 <pre>$ sudo rmmod kisni</pre>
 
