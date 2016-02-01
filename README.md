@@ -48,7 +48,7 @@ To unload the module (and clear the logs), run:
 <pre>$ sudo rmmod kisni</pre>
 
 #Developer
-Copyright (C) 2015 by Arun Prakash Jana &lt;engineerarun@gmail.com&gt;
+Copyright (C) 2015 by [Arun Prakash Jana](mailto:engineerarun@gmail.com)
 
 #Links
 http://www.gadgetweb.de/programming/39-how-to-building-your-own-kernel-space-keylogger.html  
