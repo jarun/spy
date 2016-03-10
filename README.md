@@ -7,8 +7,7 @@ You can, however, execute a script at shutdown or reboot (the procedure would be
 
 keysniffer is intended to track your own devices and NOT to trespass on others. The author is not responsible for any unethical usage.  
 
-If you find `keysniffer` useful, please consider donating via PayPal.  
-[![Donate Button](https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RMLTQ76JSXJ4Q)
+If you find `keysniffer` useful, please consider donating via PayPal. [![Donate Button](https://img.shields.io/badge/paypal-donate-orange.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RMLTQ76JSXJ4Q)
 
 #License
 keysniffer is licensed under GPL v2.
