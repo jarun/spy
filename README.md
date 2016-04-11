@@ -9,47 +9,61 @@ keysniffer is intended to track your own devices and NOT to trespass on others. 
 
 If you find `keysniffer` useful, please consider donating via PayPal. [![Donate Button](https://img.shields.io/badge/paypal-donate-orange.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RMLTQ76JSXJ4Q)
 
-#License
-keysniffer is licensed under GPL v2.
+# Table of contents
 
-#Compilation
+- [Compilation](#compilation)
+- [Usage](#usage)
+- [License](#license)
+- [Developer](#developer)
+- [Links](#links)
+
+# Compilation
 Clone the repository and run:
-<pre>$ make</pre>
 
-#Usage
+    $ make
+Note that you need to have the linux headers installed for your running kernel version.
+
+
+# Usage
 To insert the module into the kernel, run:
-<pre>$ sudo insmod kisni.ko</pre>
-To view the pressed keys, run:
-<pre>$ sudo cat /sys/kernel/debug/kisni/keys
-m
-o
-d
-i
-n
-f
-o
- 
-k
-i
-s
-n
-i
-_ENTER_
-_UP_
-.
-_TAB_
-_TAB_
-k
-_TAB_
-_ENTER_
-_ENTER_</pre>
-To unload the module (and clear the logs), run:
-<pre>$ sudo rmmod kisni</pre>
 
-#Developer
+    $ sudo insmod kisni.ko
+To view the pressed keys, run:
+
+    $ sudo cat /sys/kernel/debug/kisni/keys
+    m
+    o
+    d
+    i
+    n
+    f
+    o
+    
+    k
+    i
+    s
+    n
+    i
+    _ENTER_
+    _UP_
+    
+    _TAB_
+    _TAB_
+    k
+    _TAB_
+    _ENTER_
+    _ENTER_
+To unload the module (and clear the logs), run:
+
+    $ sudo rmmod kisni
+
+# License
+keysniffer is licensed under **GPL v2**.
+
+# Developer
 Copyright (C) 2015 by [Arun Prakash Jana](mailto:engineerarun@gmail.com)
 
-#Links
+# Links
 http://www.gadgetweb.de/programming/39-how-to-building-your-own-kernel-space-keylogger.html  
 https://wiki.archlinux.org/index.php/Xmodmap  
 http://www.osdever.net/bkerndev/Docs/keyboard.htm  
