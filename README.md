@@ -57,7 +57,7 @@ To unload the module (and clear the logs), run:
     $ sudo rmmod kisni
 
 # License
-keysniffer is licensed under **GPL v2**.
+keysniffer is licensed under **GPLv2**.
 
 # Developer
 Copyright (C) 2015 [Arun Prakash Jana](mailto:engineerarun@gmail.com)
