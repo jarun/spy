@@ -5,7 +5,7 @@ The keypress logs are recorded in debugfs as long as the module is loaded. Only 
 
 You can, however, execute a script at shutdown or reboot (the procedure would be distro-specific) to save the keys to a file.
 
-keysniffer is intended to track your own devices and NOT to trespass on others. The author is not responsible for any unethical usage.
+keysniffer is intended to track your own devices and NOT to trespass on others. The author has never usesd it to compromise someone else's system and is not responsible for any unethical application.
 
 If you find `keysniffer` useful, please consider donating via PayPal. [![Donate Button](https://img.shields.io/badge/paypal-donate-orange.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RMLTQ76JSXJ4Q)
 
