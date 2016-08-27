@@ -9,7 +9,7 @@ keysniffer is intended to track your own devices and NOT to trespass on others. 
 
 If you find `keysniffer` useful, please consider donating via PayPal. [![Donate Button](https://img.shields.io/badge/paypal-donate-orange.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RMLTQ76JSXJ4Q)
 
-# Table of contents
+## Table of contents
 
 - [Compilation](#compilation)
 - [Usage](#usage)
@@ -17,13 +17,13 @@ If you find `keysniffer` useful, please consider donating via PayPal. [![Donate 
 - [Developer](#developer)
 - [Links](#links)
 
-# Compilation
+## Compilation
 Clone the repository and run:
 
     $ make
 Note that you need to have the linux headers installed for your running kernel version.
 
-# Usage
+## Usage
 To insert the module into the kernel, run:
 
     $ sudo insmod kisni.ko
@@ -37,7 +37,7 @@ To view the pressed keys, run:
     n
     f
     o
-    
+
     k
     i
     s
@@ -45,7 +45,7 @@ To view the pressed keys, run:
     i
     _ENTER_
     _UP_
-    
+
     _TAB_
     _TAB_
     k
@@ -56,13 +56,13 @@ To unload the module (and clear the logs), run:
 
     $ sudo rmmod kisni
 
-# License
+## License
 keysniffer is licensed under **GPLv2**.
 
-# Developer
+## Developer
 Copyright (C) 2015 [Arun Prakash Jana](mailto:engineerarun@gmail.com)
 
-# Links
+## Links
 http://www.gadgetweb.de/programming/39-how-to-building-your-own-kernel-space-keylogger.html
 https://wiki.archlinux.org/index.php/Xmodmap
 http://www.osdever.net/bkerndev/Docs/keyboard.htm
