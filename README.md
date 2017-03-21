@@ -52,6 +52,33 @@ To view the pressed keys, run:
     _TAB_
     _ENTER_
     _ENTER_
+
+To use with generic keycodes (base 10), run:
+
+    $ sudo insmod kisni.ko codes=1
+Log will now be of the form shift_mask _space_ key_code:
+
+    $ sudo cat /sys/kernel/debug/kisni/keys
+    1 42
+    1 42
+    1 42
+    1 32
+    1 33
+    1 32
+    1 31
+    1 33
+    0 14
+    0 29
+    4 30
+    4 37
+    0 29
+    4 25
+    4 25
+    4 25
+    4 25
+    4 25
+    4 25
+    
 To unload the module (and clear the logs), run:
 
     $ sudo rmmod kisni
