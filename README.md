@@ -52,6 +52,44 @@ To view the pressed keys, run:
     _TAB_
     _ENTER_
     _ENTER_
+
+To view generic keycodes (hex) in the format *keycode shift_mask*, run:
+
+    $ sudo insmod kisni.ko codes=1
+    or, for decimal:
+    $ sudo insmod kisni.ko codes=2
+
+    $ sudo cat /sys/kernel/debug/kisni/keys
+    23 0
+    12 0
+    26 0
+    26 0
+    18 0
+    39 0
+    2a 0
+    2a 1
+    2a 1
+    11 1
+    18 0
+    13 0
+    26 0
+    20 0
+    2a 0
+    2a 1
+    2a 1
+    2 1
+    1c 0
+    1f 0
+    16 0
+    20 0
+    18 0
+    39 0
+    2e 0
+    1e 0
+    14 0
+    6a 0
+    1c 0
+
 To unload the module (and clear the logs), run:
 
     $ sudo rmmod kisni

