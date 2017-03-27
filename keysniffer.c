@@ -122,7 +122,7 @@ void keycode_to_string(int keycode, int shift_mask, char *buf, int type)
 {
 	switch (type) {
 	case US:
-		if (keycode >= 0x1 && keycode <= 0x77) {
+		if (keycode > KEY_RESERVED && keycode <= KEY_PAUSE) {
 			const char *us_key = (shift_mask == 1)
 			? us_keymap[keycode][1]
 			: us_keymap[keycode][0];
@@ -131,11 +131,11 @@ void keycode_to_string(int keycode, int shift_mask, char *buf, int type)
 		}
 		break;
 	case HEX:
-		if (keycode < KEY_MAX)
+		if (keycode > KEY_RESERVED && keycode < KEY_MAX)
 			snprintf(buf, CHUNK_LEN, "%x %x", keycode, shift_mask);
 		break;
 	case DEC:
-		if (keycode < KEY_MAX)
+		if (keycode > KEY_RESERVED && keycode < KEY_MAX)
 			snprintf(buf, CHUNK_LEN, "%d %d", keycode, shift_mask);
 		break;
 	}
