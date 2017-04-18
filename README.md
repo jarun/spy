@@ -94,6 +94,10 @@ To log the keycodes in decimal, run:
 
     $ sudo insmod kisni.ko codes=2
 
+To write the pressed keys to a physical file inside the filesystem (as root with read-only perms for owner), run:
+
+    $ sudo insmod kisni.ko output_path=/tmp/keys
+    
 To unload the module (and clear the logs), run:
 
     $ sudo rmmod kisni
