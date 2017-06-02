@@ -9,7 +9,10 @@ You can, however, execute a script at shutdown or reboot (the procedure would be
 
 **DISCLAIMER:** keysniffer is intended to track your own devices and NOT to trespass on others. The author has never used it to compromise any third-party device and is not responsible for any unethical application.
 
-[![PayPal](https://tuxtricks.files.wordpress.com/2016/12/donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RMLTQ76JSXJ4Q "Donate via PayPal!")
+<p align="center">
+<a href="https://saythanks.io/to/jarun"><img src="https://img.shields.io/badge/say-thanks!-ff69b4.svg" /></a>
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RMLTQ76JSXJ4Q"><img src="https://img.shields.io/badge/PayPal-donate-FC746D.svg" alt="Donate via PayPal!" /></a>
+</p>
 
 ## Table of contents
 
