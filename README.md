@@ -1,7 +1,7 @@
 # keysniffer
 A Linux kernel module to grab keys pressed in the keyboard, or a keylogger.
 
-keysniffer was originally written with the US keyboard (and conforming laptops) in mind. By default it shows human-readable strings for the keys pressed. However, as keyboards evolved, more keys got added. So the module now supports a module parameter `codes` which shows the `keycode shift_mask` pair in hex (`codes=1`) or decimal (`codes=2`). You can lookup the keycodes in `/usr/include/linux/input-event-codes.h`.
+keysniffer was originally written with the US keyboard (and conforming laptops) in mind. By default it shows human-readable strings for the keys pressed. Optionally, the `keycode shift_mask` pair can be printed in hex or decimal. You can lookup the keycodes in `/usr/include/linux/input-event-codes.h`.
 
 The keypress logs are recorded in debugfs as long as the module is loaded. Only root or sudoers can read the log. The module name has been camouflaged to blend-in with other kernel modules.
 
@@ -29,69 +29,88 @@ Clone the repository and run:
 Note that you need to have the linux headers installed for your running kernel version.
 
 ## Usage
+Module details:
+
+```
+$ modinfo kisni.ko
+filename:       /home/vaio/GitHub/keysniffer/kisni.ko
+description:    Sniff and log keys pressed in the system to debugfs
+version:        1.4
+author:         Arun Prakash Jana <engineerarun@gmail.com>
+license:        GPL v2
+srcversion:     158B58BAF786034DA45F718
+depends:
+vermagic:       4.4.0-97-generic SMP mod_unload modversions
+parm:           codes:log format (0:US keys (default), 1:hex keycodes, 2:dec keycodes) (int)
+```
+
 To insert the module into the kernel, run:
 
     $ sudo insmod kisni.ko
 To view the pressed keys, run:
 
-    $ sudo cat /sys/kernel/debug/kisni/keys
-    m
-    o
-    d
-    i
-    n
-    f
-    o
+```
+$ sudo cat /sys/kernel/debug/kisni/keys
+m
+o
+d
+i
+n
+f
+o
 
-    k
-    i
-    s
-    n
-    i
-    _ENTER_
-    _UP_
+k
+i
+s
+n
+i
+_ENTER_
+_UP_
 
-    _TAB_
-    _TAB_
-    k
-    _TAB_
-    _ENTER_
-    _ENTER_
+_TAB_
+_TAB_
+k
+_TAB_
+_ENTER_
+_ENTER_
+```
 
 To log generic hex keycodes in the format `keycode shift_mask`, run:
 
-    $ sudo insmod kisni.ko codes=1
-    // Type something
-    $ sudo cat /sys/kernel/debug/kisni/keys
-    23 0
-    12 0
-    26 0
-    26 0
-    18 0
-    39 0
-    2a 0
-    2a 1
-    2a 1
-    11 1
-    18 0
-    13 0
-    26 0
-    20 0
-    2a 0
-    2a 1
-    2a 1
-    2 1
-    1c 0
-    1f 0
-    16 0
-    20 0
-    18 0
-    39 0
-    2e 0
-    1e 0
-    14 0
-    6a 0
-    1c 0
+```
+$ sudo insmod kisni.ko codes=1
+// Type something
+$ sudo cat /sys/kernel/debug/kisni/keys
+23 0
+12 0
+26 0
+26 0
+18 0
+39 0
+2a 0
+2a 1
+2a 1
+11 1
+18 0
+13 0
+26 0
+20 0
+2a 0
+2a 1
+2a 1
+2 1
+1c 0
+1f 0
+16 0
+20 0
+18 0
+39 0
+2e 0
+1e 0
+14 0
+6a 0
+1c 0
+```
 
 To log the keycodes in decimal, run:
 
