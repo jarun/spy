@@ -38,9 +38,9 @@ description:    Sniff and log keys pressed in the system to debugfs
 version:        1.4
 author:         Arun Prakash Jana <engineerarun@gmail.com>
 license:        GPL v2
-srcversion:     158B58BAF786034DA45F718
+srcversion:     08CA52B5D5B14E4B1C5BEB1
 depends:
-vermagic:       4.4.0-97-generic SMP mod_unload modversions
+vermagic:       4.4.0-98-generic SMP mod_unload modversions
 parm:           codes:log format (0:US keys (default), 1:hex keycodes, 2:dec keycodes) (int)
 ```
 
