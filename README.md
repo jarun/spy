@@ -17,40 +17,38 @@ You can, however, execute a script at shutdown or reboot (the procedure would be
 ## Table of contents
 
 - [Compilation](#compilation)
+    - [Build](#build)
+    - [DKMS support](#dkms-support)
 - [Usage](#usage)
 - [License](#license)
 - [Developer](#developer)
 - [Links](#links)
 
 ## Compilation
+### Build
 Clone the repository and run:
 
-    $ make
-Note that you need to have the linux headers installed for your running kernel version.
+    # make
+Note that you need to have the linux kernel headers installed for your running kernel version.
+
+### DKMS support
+If you have DKMS installed, you can install keysniffer in such a way that it survives kernel upgrades. It is recommended to remove older versions of keysniffer by running `dkms remove -m kisni -v OLDVERSION --all` as root. To install the new version, run:
+
+    # make -f Makefile.dkms
+To uninstall it, run:
+
+    # make -f Makefile.dkms uninstall
 
 ## Usage
-Module details:
-
-```
-$ modinfo kisni.ko
-filename:       /home/vaio/GitHub/keysniffer/kisni.ko
-description:    Sniff and log keys pressed in the system to debugfs
-version:        1.4
-author:         Arun Prakash Jana <engineerarun@gmail.com>
-license:        GPL v2
-srcversion:     08CA52B5D5B14E4B1C5BEB1
-depends:
-vermagic:       4.4.0-98-generic SMP mod_unload modversions
-parm:           codes:log format (0:US keys (default), 1:hex keycodes, 2:dec keycodes) (int)
-```
-
 To insert the module into the kernel, run:
 
-    $ sudo insmod kisni.ko
+    # insmod kisni.ko
+    OR
+    # make load
 To view the pressed keys, run:
 
 ```
-$ sudo cat /sys/kernel/debug/kisni/keys
+# cat /sys/kernel/debug/kisni/keys
 modinfo kisni.ko
 sudo cat /sys/kernel/debug/kisni/keys
 ```
@@ -58,9 +56,9 @@ sudo cat /sys/kernel/debug/kisni/keys
 To log generic hex keycodes in the format `keycode shift_mask`, run:
 
 ```
-$ sudo insmod kisni.ko codes=1
+# insmod kisni.ko codes=1
 // Type something
-$ sudo cat /sys/kernel/debug/kisni/keys
+# cat /sys/kernel/debug/kisni/keys
 23 0
 12 0
 26 0
@@ -94,11 +92,26 @@ $ sudo cat /sys/kernel/debug/kisni/keys
 
 To log the keycodes in decimal, run:
 
-    $ sudo insmod kisni.ko codes=2
+    # insmod kisni.ko codes=2
 
 To unload the module (and clear the logs), run:
 
-    $ sudo rmmod kisni
+    # rmmod kisni
+
+Module details:
+
+```
+# modinfo kisni.ko
+filename:       /home/vaio/GitHub/keysniffer/kisni.ko
+description:    Sniff and log keys pressed in the system to debugfs
+version:        1.4
+author:         Arun Prakash Jana <engineerarun@gmail.com>
+license:        GPL v2
+srcversion:     08CA52B5D5B14E4B1C5BEB1
+depends:
+vermagic:       4.4.0-98-generic SMP mod_unload modversions
+parm:           codes:log format (0:US keys (default), 1:hex keycodes, 2:dec keycodes) (int)
+```
 
 ## License
 keysniffer is licensed under **GPLv2**.

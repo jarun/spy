@@ -32,11 +32,13 @@
 #define HEX 1 /* Type code for hexadecimal log */
 #define DEC 2 /* Type code for decimal log */
 
+#define KEYSNIFFER_VERSION "1.4"
+
 static int codes; /* Log type module parameter */
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
-MODULE_VERSION("1.4");
+MODULE_VERSION(KEYSNIFFER_VERSION);
 MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
 
 module_param(codes, int, 0644);
