@@ -31,20 +31,26 @@ Clone the repository and run:
     # make
 Note that you need to have the linux kernel headers installed for your running kernel version.
 
-### DKMS support
-If you have DKMS installed, you can install keysniffer in such a way that it survives kernel upgrades. It is recommended to remove older versions of keysniffer by running `dkms remove -m kisni -v OLDVERSION --all` as root. To install the new version, run:
-
-    # make -f Makefile.dkms
-To uninstall it, run:
-
-    # make -f Makefile.dkms uninstall
-
-## Usage
 To insert the module into the kernel, run:
 
     # insmod kisni.ko
     OR
     # make load
+
+To unload the module (and clear the logs), run:
+
+    # rmmod kisni
+
+### DKMS support
+If you have DKMS installed, you can install keysniffer in such a way that it survives kernel upgrades. It is recommended to remove older versions of keysniffer by running `dkms remove -m kisni -v OLDVERSION --all` as root. To install the new version, run:
+
+    # make -f Makefile.dkms
+
+To uninstall it, run:
+
+    # make -f Makefile.dkms uninstall
+
+## Usage
 To view the pressed keys, run:
 
 ```
@@ -94,11 +100,7 @@ To log the keycodes in decimal, run:
 
     # insmod kisni.ko codes=2
 
-To unload the module (and clear the logs), run:
-
-    # rmmod kisni
-
-Module details:
+To check the module details:
 
 ```
 # modinfo kisni.ko
