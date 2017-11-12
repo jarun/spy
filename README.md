@@ -51,28 +51,8 @@ To view the pressed keys, run:
 
 ```
 $ sudo cat /sys/kernel/debug/kisni/keys
-m
-o
-d
-i
-n
-f
-o
-
-k
-i
-s
-n
-i
-_ENTER_
-_UP_
-
-_TAB_
-_TAB_
-k
-_TAB_
-_ENTER_
-_ENTER_
+modinfo kisni.ko
+sudo cat /sys/kernel/debug/kisni/keys
 ```
 
 To log generic hex keycodes in the format `keycode shift_mask`, run:
