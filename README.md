@@ -58,7 +58,8 @@ To view the pressed keys, run:
 ```
 # cat /sys/kernel/debug/kisni/keys
 modinfo kisni.ko
-sudo cat /sys/kernel/debug/kisni/keys
+cat /sys/kernel/debug/kisni/keys
+#
 ```
 
 To log generic hex keycodes in the format `keycode shift_mask`, run:
@@ -106,14 +107,14 @@ To check the module details:
 
 ```
 # modinfo kisni.ko
-filename:       /home/vaio/GitHub/keysniffer/kisni.ko
+filename:       kisni.ko
 description:    Sniff and log keys pressed in the system to debugfs
-version:        1.4
+version:        1.6
 author:         Arun Prakash Jana <engineerarun@gmail.com>
 license:        GPL v2
-srcversion:     08CA52B5D5B14E4B1C5BEB1
+srcversion:     40AA880EE5017590B293170
 depends:
-vermagic:       4.4.0-98-generic SMP mod_unload modversions
+vermagic:       4.4.0-103-generic SMP mod_unload modversions
 parm:           codes:log format (0:US keys (default), 1:hex keycodes, 2:dec keycodes) (int)
 ```
 

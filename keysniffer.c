@@ -32,7 +32,7 @@
 #define HEX 1 /* Type code for hexadecimal log */
 #define DEC 2 /* Type code for decimal log */
 
-#define KEYSNIFFER_VERSION "1.4"
+#define KEYSNIFFER_VERSION "1.6"
 
 static int codes; /* Log type module parameter */
 

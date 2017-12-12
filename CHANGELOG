@@ -1,0 +1,57 @@
+keysniffer v1.6
+2017-12-12
+
+What's in?
+- DKMS support
+- Prepend Left (`L`) or Right (`R`) for Ctrl, Shift and Alt keys
+- Replace `_ENTER_` with `\n`
+- Append newline to keycodes (for param codes=1/2)
+- Add targets install, load, unload, uninstall to Makefile
+
+-------------------------------------------------------------------------------
+
+keysniffer v1.5
+2017-03-28
+
+Modifications
+- Add module param `codes` to support hex and decimal keycodes in output
+
+-------------------------------------------------------------------------------
+
+keysniffer v1.4
+2016-10-03
+
+Modifications
+- Coding style and readability improvements
+
+-------------------------------------------------------------------------------
+
+keysniffer v1.2
+2015-10-30
+
+Modifications
+- Added version information to module
+- Better module description
+- Changed the source file name to project name
+- Fixed license issues, make GPL v2 (thanks @gregkh)
+- Added output example to README.txt
+
+-------------------------------------------------------------------------------
+
+keysniffer v1.1
+2015-10-12
+
+Modifications
+- Using a 16KB buffer to log keys in debugfs
+- Using stricter permissions for debugfs log file (readable only by root)
+
+-------------------------------------------------------------------------------
+
+keysniffer v1.0
+2015-10-11
+
+Modifications
+- Implement US keyboard grab support
+- Share the keypress log via debugfs
+
+-------------------------------------------------------------------------------
