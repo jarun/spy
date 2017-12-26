@@ -119,15 +119,15 @@ parm:           codes:log format (0:US keys (default), 1:hex keycodes, 2:dec key
 ```
 
 ## License
-keysniffer is licensed under **GPLv2**.
+<a href="https://github.com/jarun/googler/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-GPLv2-yellow.svg?maxAge=2592000" alt="License" /></a>
 
 ## Developer
-Copyright (C) 2015 [Arun Prakash Jana](mailto:engineerarun@gmail.com)
+Copyright © 2015 [Arun Prakash Jana](mailto:engineerarun@gmail.com)
 
 ## Links
-http://www.gadgetweb.de/programming/39-how-to-building-your-own-kernel-space-keylogger.html
-https://wiki.archlinux.org/index.php/Xmodmap
-http://www.osdever.net/bkerndev/Docs/keyboard.htm
-http://arjunsreedharan.org/post/99370248137/kernel-201-lets-write-a-kernel-with-keyboard
-http://www.linuxquestions.org/questions/slackware-14/how-to-match-x-keyboard-layout-with-the-the-kernel-keyboard-map-4175455061/
-http://www.tldp.org/LDP/lkmpg/2.4/html/x1210.html
+- http://www.gadgetweb.de/programming/39-how-to-building-your-own-kernel-space-keylogger.html
+- https://wiki.archlinux.org/index.php/Xmodmap
+- http://www.osdever.net/bkerndev/Docs/keyboard.htm
+- http://arjunsreedharan.org/post/99370248137/kernel-201-lets-write-a-kernel-with-keyboard
+- http://www.linuxquestions.org/questions/slackware-14/how-to-match-x-keyboard-layout-with-the-the-kernel-keyboard-map-4175455061/
+- http://www.tldp.org/LDP/lkmpg/2.4/html/x1210.html
