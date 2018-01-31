@@ -104,7 +104,7 @@ static const char *us_keymap[][2] = {
 };
 
 static size_t buf_pos;
-static char keys_buf[BUF_LEN] = {0};
+static char keys_buf[BUF_LEN];
 
 const struct file_operations keys_fops = {
 	.owner = THIS_MODULE,
@@ -211,8 +211,6 @@ int keysniffer_cb(struct notifier_block *nblock,
  */
 static int __init keysniffer_init(void)
 {
-	buf_pos = 0;
-
 	if (codes < 0 || codes > 2)
 		return -EINVAL;
 
