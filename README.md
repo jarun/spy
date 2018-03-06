@@ -1,7 +1,7 @@
 # keysniffer
 A Linux kernel module to grab keys pressed in the keyboard, or a keylogger.
 
-keysniffer was originally written with the US keyboard (and conforming laptops) in mind. By default it shows human-readable strings for the keys pressed. Optionally, the `keycode shift_mask` pair can be printed in hex or decimal. You can lookup the keycodes in `/usr/include/linux/input-event-codes.h`.
+keysniffer was initially written with the US keyboard (and conforming laptops) in mind. By default it shows human-readable strings for the keys pressed. Optionally, the `keycode shift_mask` pair can be printed in hex or decimal. You can lookup the keycodes in `/usr/include/linux/input-event-codes.h`.
 
 The keypress logs are recorded in debugfs as long as the module is loaded. Only root or sudoers can read the log. The module name has been camouflaged to blend-in with other kernel modules.
 
@@ -13,7 +13,7 @@ You can, however, execute a script at shutdown or reboot (the procedure would be
 
 <p align="center">
 <a href="https://saythanks.io/to/jarun"><img src="https://img.shields.io/badge/say-thanks!-ff69b4.svg" /></a>
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RMLTQ76JSXJ4Q"><img src="https://img.shields.io/badge/Donate-$5-green.svg" alt="Donate via PayPal!" /></a>
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RMLTQ76JSXJ4Q"><img src="https://img.shields.io/badge/PayPal-donate-green.svg" alt="Donate via PayPal!" /></a>
 </p>
 
 ## Table of contents
@@ -109,12 +109,13 @@ To check the module details:
 # modinfo kisni.ko
 filename:       kisni.ko
 description:    Sniff and log keys pressed in the system to debugfs
-version:        1.6
+version:        1.7
 author:         Arun Prakash Jana <engineerarun@gmail.com>
 license:        GPL v2
-srcversion:     40AA880EE5017590B293170
+srcversion:     26381298B8DB375C50B04EA
 depends:
-vermagic:       4.4.0-103-generic SMP mod_unload modversions
+name:           kisni
+vermagic:       4.13.0-32-generic SMP mod_unload
 parm:           codes:log format (0:US keys (default), 1:hex keycodes, 2:dec keycodes) (int)
 ```
 
