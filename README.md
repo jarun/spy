@@ -1,7 +1,9 @@
 # keysniffer
 A Linux kernel module to grab keys pressed in the keyboard, or a keylogger.
 
-keysniffer was initially written with the US keyboard (and conforming laptops) in mind. By default it shows human-readable strings for the keys pressed. Optionally, the `keycode shift_mask` pair can be printed in hex or decimal. You can lookup the keycodes in `/usr/include/linux/input-event-codes.h`.
+It's also an academic project for devs willing to learn Linux kernel module programming, with extensive comments, checkpatch.pl scanned code, standards-compliant Makefile and DKMS support.
+
+keysniffer was initially written for the US keyboard (and conforming laptops). By default it shows human-readable strings for the keys pressed. Optionally, the `keycode shift_mask` pair can be printed in hex or decimal. You can lookup the keycodes in `/usr/include/linux/input-event-codes.h`.
 
 The keypress logs are recorded in debugfs as long as the module is loaded. Only root or sudoers can read the log. The module name has been camouflaged to blend-in with other kernel modules.
 
