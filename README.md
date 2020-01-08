@@ -9,7 +9,7 @@ The keypress logs are recorded in debugfs as long as the module is loaded. Only 
 
 You can, however, execute a script at shutdown or reboot (the procedure would be distro-specific) to save the keys to a file.
 
-**DISCLAIMER:** keysniffer is intended to track your own devices and NOT to trespass on others. The author has never used it to compromise any third-party device and is not responsible for any unethical application.
+**DISCLAIMER:** keysniffer is intended to track your own devices and NOT to trespass on others. The author is not responsible for any unethical application.
 
 *Love smart and efficient utilities? Explore [my repositories](https://github.com/jarun?tab=repositories). Buy me a cup of coffee if they help you.*
 
