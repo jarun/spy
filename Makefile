@@ -1,7 +1,7 @@
 modname := kisni
 obj-m := $(modname).o
 
-kisni-objs := keysniffer.o
+kisni-objs := spy.o
 
 KVERSION = $(shell uname -r)
 KDIR := /lib/modules/$(KVERSION)/build

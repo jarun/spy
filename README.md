@@ -1,15 +1,15 @@
-# keysniffer
+# spy
 A Linux kernel module to grab keys pressed in the keyboard, or a keylogger.
 
 It's also an academic project for devs willing to learn Linux kernel module programming, with extensive comments, checkpatch.pl scanned code, standards-compliant Makefile and DKMS support.
 
-keysniffer was initially written for the US keyboard (and conforming laptops). By default it shows human-readable strings for the keys pressed. Optionally, the `keycode shift_mask` pair can be printed in hex or decimal. You can lookup the keycodes in `/usr/include/linux/input-event-codes.h`.
+spy was initially written for the US keyboard (and conforming laptops). By default it shows human-readable strings for the keys pressed. Optionally, the `keycode shift_mask` pair can be printed in hex or decimal. You can lookup the keycodes in `/usr/include/linux/input-event-codes.h`.
 
 The keypress logs are recorded in debugfs as long as the module is loaded. Only root or sudoers can read the log. The module name has been camouflaged to blend-in with other kernel modules.
 
 You can, however, execute a script at shutdown or reboot (the procedure would be distro-specific) to save the keys to a file.
 
-**DISCLAIMER:** keysniffer is intended to track your own devices and NOT to trespass on others. The author is not responsible for any unethical application.
+**DISCLAIMER:** spy is intended to track your own devices and NOT to trespass on others. The author is not responsible for any unethical application.
 
 *Love smart and efficient utilities? Explore [my repositories](https://github.com/jarun?tab=repositories). Buy me a cup of coffee if they help you.*
 
@@ -45,7 +45,7 @@ To unload the module (and clear the logs), run:
     # rmmod kisni
 
 ### DKMS support
-If you have DKMS installed, you can install keysniffer in such a way that it survives kernel upgrades. It is recommended to remove older versions of keysniffer by running `dkms remove -m kisni -v OLDVERSION --all` as root. To install the new version, run:
+If you have DKMS installed, you can install spy in such a way that it survives kernel upgrades. It is recommended to remove older versions of spy by running `dkms remove -m kisni -v OLDVERSION --all` as root. To install the new version, run:
 
     # make -f Makefile.dkms
 

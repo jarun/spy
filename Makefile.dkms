@@ -1,8 +1,8 @@
 modname := kisni
 DKMS := dkms
-modver := $(shell awk -F'"' '/define *KEYSNIFFER_VERSION/{print $$2}' < keysniffer.c)
+modver := $(shell awk -F'"' '/define *SPY_VERSION/{print $$2}' < spy.c)
 
-kisni-objs := keysniffer.o
+kisni-objs := spy.o
 
 # directory in which generated files are stored
 DKMS_DEST := /usr/src/$(modname)-$(modver)
@@ -11,7 +11,7 @@ all: install
 
 src_install:
 	mkdir -p '$(DKMS_DEST)'
-	cp Makefile keysniffer.c '$(DKMS_DEST)'
+	cp Makefile spy.c '$(DKMS_DEST)'
 	sed 's/#MODULE_VERSION#/$(modver)/' dkms/dkms.conf > '$(DKMS_DEST)/dkms.conf'
 
 build: src_install
