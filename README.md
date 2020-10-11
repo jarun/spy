@@ -110,13 +110,14 @@ To check the module details:
 # modinfo kisni.ko
 filename:       kisni.ko
 description:    Sniff and log keys pressed in the system to debugfs
-version:        1.7
+version:        1.8
 author:         Arun Prakash Jana <engineerarun@gmail.com>
 license:        GPL v2
-srcversion:     26381298B8DB375C50B04EA
+srcversion:     F62F351D06A999293307C20
 depends:
+retpoline:      Y
 name:           kisni
-vermagic:       4.13.0-32-generic SMP mod_unload
+vermagic:       5.4.0-48-generic SMP mod_unload
 parm:           codes:log format (0:US keys (default), 1:hex keycodes, 2:dec keycodes) (int)
 ```
 
